@@ -19,6 +19,11 @@ const client = new line.messagingApi.MessagingApiClient({
 
 const app = express();
 
+// 簡單的診斷接口
+app.get('/ping', (req, res) => {
+  res.send('pong! Vercel is alive.');
+});
+
 app.post('/webhook', line.middleware(config), (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
