@@ -81,8 +81,8 @@ async function handleEvent(event) {
   console.log(`Received message: ${userMessage}`);
 
   // Base rule for all AI generations in this bot
-  const baseRule = "【排版與長度規則】：請維持目前的分段結構，但請將「總字數」嚴格限制在 300 字以內，文字要極度精簡有力。絕對禁止使用 Markdown 粗體符號 (**)，請改用合適的 Emoji（如 📍, 💡, ✨, ☕️）作為段落開頭，讓 LINE 版面保持清晰乾淨且層次分明。";
-  const guidePersona = "你的身分是「The Guide (共振導航)」。你是一位客觀、平靜、具備高維度洞察力的心靈導師。你不帶有情緒，不評判對錯，你的目的是協助使用者看清盲點，轉換匱乏的頻率，回到豐盛與力量的狀態。你對任何領域的煩惱（工作、感情、生活）都能給予建議。";
+  const baseRule = "【排版與長度規則】：請維持目前的分段結構，但請將「總字數」嚴格限制在 300 字以內。文字必須「極度白話、口語、好懂」，像是一個溫暖的朋友在跟你說話，請避免過於深奧的身心靈術語（如頻率、量子、高維度等），讓人一眼就能看懂。絕對禁止使用 Markdown 粗體符號 (**)，請改用合適的 Emoji（如 📍, 💡, ✨, ☕️）作為段落開頭，讓 LINE 版面保持清晰乾淨且層次分明。";
+  const guidePersona = "你的身分是「The Guide (共振導航)」。你是一位溫暖、平靜且接地氣的心靈導師。你不評判對錯，你的目的是用最簡單、白話的語言協助使用者轉換焦慮。你對任何領域的煩惱（工作、感情、生活）都能給予建議，請用朋友般的口吻，不要有距離感。";
 
   try {
     // 2. 功能選單/打招呼 (含按鈕)
@@ -120,7 +120,7 @@ async function handleEvent(event) {
       const dilemma = userMessage.replace(/^(選擇|猶豫)[:：]?/, '').trim();
       const prompt = `${guidePersona}
       使用者遇到了一個選擇或猶豫：「${dilemma}」。
-      請用豐盛法則的角度，給予他客觀的分析與建議。引導他選擇那個會讓他感到「擴展」而非「萎縮」的選項。
+      請用溫暖白話的角度，給予他客觀的分析與建議。引導他選擇那個會讓他感到「放鬆、擴展」而非「緊繃」的選項。
       ${baseRule}`;
       
       const result = await model.generateContent(prompt);
@@ -138,15 +138,15 @@ async function handleEvent(event) {
       if (!negativeThought) {
         return await client.replyMessage({ 
           replyToken, 
-          messages: [{ type: 'text', text: '請在「不等於：」後面加上你目前的焦慮或負面想法喔！\n例如：「不等於：我很胖」或「不等於：我一定會搞砸」。', quickReply: menuQuickReply }] 
+          messages: [{ type: 'text', text: '請直接在「不等於」後面加上你想打破的焦慮喔！\n例如：「不等於我很胖」或「不等於我一定會搞砸」。', quickReply: menuQuickReply }] 
         });
       }
 
       const prompt = `${guidePersona}
       使用者正在進行「不等於遊戲（認知解離練習）」，他輸入了負面想法：「${negativeThought}」。
-      請幫他完成這個「不等於」的造句，並用溫柔且堅定的語氣鼓勵他大聲唸出來。
+      請幫他完成這個「不等於」的造句，並用極度白話、溫柔且堅定的語氣鼓勵他大聲唸出來。
       
-      格式必須包含這句話：「『${negativeThought}』不等於『那是真正的我 / 客觀的事實』」 (你可以根據他的煩惱微調後半句，例如不等於『我的全部價值』等)。
+      格式必須包含這句話：「『${negativeThought}』不等於『那是真正的我 / 客觀的事實』」 (你可以根據他的煩惱用更口語的方式微調後半句，例如不等於『我的全部價值』等)。
       
       ${baseRule}`;
       
