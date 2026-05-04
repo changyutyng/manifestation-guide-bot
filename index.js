@@ -90,11 +90,12 @@ async function handleEvent(event) {
       return await client.replyMessage({ replyToken, messages: [welcomeMessage] });
     }
     
-    // 3. SOS (Grounding)
+    // 3. SOS (Grounding / Emotional Regulation)
     if (userMessage.toUpperCase() === 'SOS' || userMessage === '焦慮') {
+      const randomIndex = Math.floor(Math.random() * content.sos_exercises.length);
       return await client.replyMessage({ 
         replyToken, 
-        messages: [{ type: 'text', text: content.grounding, quickReply: menuQuickReply }] 
+        messages: [{ type: 'text', text: content.sos_exercises[randomIndex], quickReply: menuQuickReply }] 
       });
     }
     
