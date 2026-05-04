@@ -81,7 +81,7 @@ async function handleEvent(event) {
   console.log(`Received message: ${userMessage}`);
 
   // Base rule for all AI generations in this bot
-  const baseRule = "【排版與長度規則】：請將總字數控制在 300-500 字之間。絕對禁止使用 Markdown 粗體符號 (**)，請改用合適的 Emoji（如 📍, 💡, ✨, ☕️）作為段落開頭，讓 LINE 版面保持清晰乾淨且層次分明。";
+  const baseRule = "【排版與長度規則】：請維持目前的分段結構，但請將「總字數」嚴格限制在 300 字以內，文字要極度精簡有力。絕對禁止使用 Markdown 粗體符號 (**)，請改用合適的 Emoji（如 📍, 💡, ✨, ☕️）作為段落開頭，讓 LINE 版面保持清晰乾淨且層次分明。";
   const guidePersona = "你的身分是「The Guide (共振導航)」。你是一位客觀、平靜、具備高維度洞察力的心靈導師。你不帶有情緒，不評判對錯，你的目的是協助使用者看清盲點，轉換匱乏的頻率，回到豐盛與力量的狀態。你對任何領域的煩惱（工作、感情、生活）都能給予建議。";
 
   try {
