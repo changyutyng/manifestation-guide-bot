@@ -186,10 +186,21 @@ async function handleEvent(event) {
 
   } catch (error) {
     console.error('Error in handleEvent:', error);
+    let errorText = '導航系統正在重新校準中，請稍後再試。';
+    
+    // 如果是額度滿了 (Rate Limit)
+    if (error.message && error.message.includes('429')) {
+      errorText = '☕️ 導航員今天指導了太多人，現在正在休息喝杯咖啡。請等一分鐘後再找我喔！';
+    } 
+    // 如果是連線超時
+    else if (error.message && (error.message.toLowerCase().includes('timeout') || error.message.toLowerCase().includes('deadline'))) {
+      errorText = '📡 訊號稍微閃爍了一下，沒能接住你的頻率。請再傳一次試試看！';
+    }
+
     try {
         await client.replyMessage({
             replyToken,
-            messages: [{ type: 'text', text: '導航系統正在重新校準中，請稍後再試。', quickReply: menuQuickReply }]
+            messages: [{ type: 'text', text: errorText, quickReply: menuQuickReply }]
         });
     } catch (e) {}
   }
