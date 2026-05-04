@@ -35,29 +35,31 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 });
 
 async function handleEvent(event) {
+  const menuQuickReply = {
+    items: [
+      {
+        type: 'action',
+        action: { type: 'message', label: '🪐 抽牌提醒', text: '抽牌' }
+      },
+      {
+        type: 'action',
+        action: { type: 'message', label: '🧘🏻‍♂️ SOS急救', text: 'SOS' }
+      },
+      {
+        type: 'action',
+        action: { type: 'message', label: '📍 轉換身分', text: '我想轉換：(請在此輸入你的煩惱)' }
+      },
+      {
+        type: 'action',
+        action: { type: 'message', label: '⚖️ 幫我做選擇', text: '選擇：(請在此輸入猶豫的事)' }
+      }
+    ]
+  };
+
   const welcomeMessage = {
     type: 'text',
     text: content.welcome,
-    quickReply: {
-      items: [
-        {
-          type: 'action',
-          action: { type: 'message', label: '🪐 抽牌提醒', text: '抽牌' }
-        },
-        {
-          type: 'action',
-          action: { type: 'message', label: '🧘🏻‍♂️ SOS急救', text: 'SOS' }
-        },
-        {
-          type: 'action',
-          action: { type: 'message', label: '📍 轉換身分', text: '我想轉換：(請在此輸入你的煩惱)' }
-        },
-        {
-          type: 'action',
-          action: { type: 'message', label: '⚖️ 幫我做選擇', text: '選擇：(請在此輸入猶豫的事)' }
-        }
-      ]
-    }
+    quickReply: menuQuickReply
   };
 
   // 1. 處理加入好友 (Follow) 事件：主動發送歡迎引導 (含按鈕)
@@ -90,16 +92,22 @@ async function handleEvent(event) {
     
     // 3. SOS (Grounding)
     if (userMessage.toUpperCase() === 'SOS' || userMessage === '焦慮') {
-      return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: content.grounding }] });
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: content.grounding, quickReply: menuQuickReply }] 
+      });
     }
     
-    // 2. Random Affirmation Card
+    // 4. Random Affirmation Card
     else if (userMessage === '抽牌' || userMessage === '提醒') {
       const randomIndex = Math.floor(Math.random() * content.cards.length);
-      return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: content.cards[randomIndex] }] });
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: content.cards[randomIndex], quickReply: menuQuickReply }] 
+      });
     }
     
-    // 3. Vibe Check / Dilemma Advice
+    // 5. Vibe Check / Dilemma Advice
     else if (userMessage.startsWith('選擇') || userMessage.startsWith('猶豫')) {
       const dilemma = userMessage.replace(/^(選擇|猶豫)/, '').trim();
       const prompt = `${guidePersona}
@@ -108,10 +116,13 @@ async function handleEvent(event) {
       ${baseRule}`;
       
       const result = await model.generateContent(prompt);
-      return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: result.response.text().trim() }] });
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: result.response.text().trim(), quickReply: menuQuickReply }] 
+      });
     }
 
-    // 4. Identity Shift (Default for all other text)
+    // 6. Identity Shift (Default for all other text)
     else {
       const prompt = `${guidePersona}
       使用者提供了一段關於困境、願望或能力的陳述：「${userMessage}」。
@@ -125,7 +136,10 @@ async function handleEvent(event) {
       🪞 頻率校準建議：(給予一個具體的轉念動作或生活小練習)`;
 
       const result = await model.generateContent(prompt);
-      return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: result.response.text().trim() }] });
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: result.response.text().trim(), quickReply: menuQuickReply }] 
+      });
     }
 
   } catch (error) {
@@ -133,7 +147,7 @@ async function handleEvent(event) {
     try {
         await client.replyMessage({
             replyToken,
-            messages: [{ type: 'text', text: '導航系統正在重新校準中，請稍後再試。' }]
+            messages: [{ type: 'text', text: '導航系統正在重新校準中，請稍後再試。', quickReply: menuQuickReply }]
         });
     } catch (e) {}
   }
