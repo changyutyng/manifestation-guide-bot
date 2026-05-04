@@ -39,7 +39,7 @@ async function handleEvent(event) {
     items: [
       {
         type: 'action',
-        action: { type: 'message', label: '🪐 抽牌提醒', text: '抽牌' }
+        action: { type: 'message', label: '📍 顯化轉換', text: '轉換身分' }
       },
       {
         type: 'action',
@@ -47,11 +47,11 @@ async function handleEvent(event) {
       },
       {
         type: 'action',
-        action: { type: 'message', label: '📍 轉換身分', text: '轉換身分' }
+        action: { type: 'message', label: '⚖️ 幫我做選擇', text: '幫我做選擇' }
       },
       {
         type: 'action',
-        action: { type: 'message', label: '⚖️ 幫我做選擇', text: '幫我做選擇' }
+        action: { type: 'message', label: '🪐 抽牌提醒', text: '抽牌' }
       }
     ]
   };
