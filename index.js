@@ -131,14 +131,14 @@ async function handleEvent(event) {
     }
 
     // 6. 不等於遊戲互動
-    else if (userMessage.startsWith('不等於')) {
-      const negativeThought = userMessage.replace(/^不等於[:：]?/, '').trim();
+    else if (userMessage.endsWith('不等於')) {
+      const negativeThought = userMessage.replace(/不等於$/, '').trim();
       
-      // 若只輸入「不等於」而沒有內容，則引導輸入
+      // 若只有「不等於」而沒有內容，則引導輸入
       if (!negativeThought) {
         return await client.replyMessage({ 
           replyToken, 
-          messages: [{ type: 'text', text: '請直接在「不等於」後面加上你想打破的焦慮喔！\n例如：「不等於我很胖」或「不等於我一定會搞砸」。', quickReply: menuQuickReply }] 
+          messages: [{ type: 'text', text: '請直接在你目前的焦慮或負面想法後面加上「不等於」喔！\n例如：「我很胖不等於」或「我一定會搞砸不等於」。', quickReply: menuQuickReply }] 
         });
       }
 
