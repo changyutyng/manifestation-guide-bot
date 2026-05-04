@@ -133,7 +133,7 @@ async function handleEvent(event) {
     else if (userMessage === '顯化轉換' || userMessage === '轉換身分' || userMessage === '我想轉換') {
       return await client.replyMessage({ 
         replyToken, 
-        messages: [{ type: 'text', text: '準備好進行身分轉換了嗎？\n\n請直接在下方輸入你目前的困境、焦慮或願望（例如：「我好擔心下個月的收入」），我將為你調整頻率。', quickReply: menuQuickReply }] 
+        messages: [{ type: 'text', text: '準備好練習顯化轉換思考了嗎？\n\n請直接在下方輸入你目前的困境、焦慮或願望（例如：「我好擔心下個月的收入」），我將為你調整頻率。', quickReply: menuQuickReply }] 
       });
     }
     // Identity Shift 實際執行 (Default for all other text)
