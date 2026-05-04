@@ -39,11 +39,11 @@ async function handleEvent(event) {
     items: [
       {
         type: 'action',
-        action: { type: 'message', label: '📍 顯化轉換', text: '轉換身分' }
+        action: { type: 'message', label: '📍 顯化轉換', text: '顯化轉換' }
       },
       {
         type: 'action',
-        action: { type: 'message', label: '🧘🏻‍♂️ SOS急救', text: 'SOS' }
+        action: { type: 'message', label: '🧘🏻‍♂️ SOS', text: 'SOS' }
       },
       {
         type: 'action',
@@ -130,7 +130,7 @@ async function handleEvent(event) {
     }
 
     // 6. Identity Shift 流程引導
-    else if (userMessage === '轉換身分' || userMessage === '我想轉換') {
+    else if (userMessage === '顯化轉換' || userMessage === '轉換身分' || userMessage === '我想轉換') {
       return await client.replyMessage({ 
         replyToken, 
         messages: [{ type: 'text', text: '準備好進行身分轉換了嗎？\n\n請直接在下方輸入你目前的困境、焦慮或願望（例如：「我好擔心下個月的收入」），我將為你調整頻率。', quickReply: menuQuickReply }] 
