@@ -30,6 +30,15 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 });
 
 async function handleEvent(event) {
+  // 1. 處理加入好友 (Follow) 事件：主動發送歡迎引導
+  if (event.type === 'follow') {
+    return await client.replyMessage({
+      replyToken: event.replyToken,
+      messages: [{ type: 'text', text: content.welcome }]
+    });
+  }
+
+  // 確保後續只處理文字訊息
   if (event.type !== 'message' || event.message.type !== 'text') {
     return null;
   }
@@ -44,7 +53,12 @@ async function handleEvent(event) {
   const guidePersona = "你的身分是「The Guide (共振導航)」。你是一位客觀、平靜、具備高維度洞察力的心靈導師。你不帶有情緒，不評判對錯，你的目的是協助使用者看清盲點，轉換匱乏的頻率，回到豐盛與力量的狀態。你對任何領域的煩惱（工作、感情、生活）都能給予建議。";
 
   try {
-    // 1. SOS (Grounding)
+    // 2. 功能選單/打招呼
+    if (['你好', '哈囉', '幫助', '說明', '功能', '你是誰', 'hi', 'hello', 'help'].includes(userMessage.toLowerCase())) {
+      return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: content.welcome }] });
+    }
+    
+    // 3. SOS (Grounding)
     if (userMessage.toUpperCase() === 'SOS' || userMessage === '焦慮') {
       return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: content.grounding }] });
     }
