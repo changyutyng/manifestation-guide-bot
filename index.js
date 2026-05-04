@@ -130,7 +130,34 @@ async function handleEvent(event) {
       });
     }
 
-    // 6. Identity Shift 流程引導
+    // 6. 不等於遊戲互動
+    else if (userMessage.startsWith('不等於')) {
+      const negativeThought = userMessage.replace(/^不等於[:：]?/, '').trim();
+      
+      // 若只輸入「不等於」而沒有內容，則引導輸入
+      if (!negativeThought) {
+        return await client.replyMessage({ 
+          replyToken, 
+          messages: [{ type: 'text', text: '請在「不等於：」後面加上你目前的焦慮或負面想法喔！\n例如：「不等於：我很胖」或「不等於：我一定會搞砸」。', quickReply: menuQuickReply }] 
+        });
+      }
+
+      const prompt = `${guidePersona}
+      使用者正在進行「不等於遊戲（認知解離練習）」，他輸入了負面想法：「${negativeThought}」。
+      請幫他完成這個「不等於」的造句，並用溫柔且堅定的語氣鼓勵他大聲唸出來。
+      
+      格式必須包含這句話：「『${negativeThought}』不等於『那是真正的我 / 客觀的事實』」 (你可以根據他的煩惱微調後半句，例如不等於『我的全部價值』等)。
+      
+      ${baseRule}`;
+      
+      const result = await model.generateContent(prompt);
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: result.response.text().trim(), quickReply: menuQuickReply }] 
+      });
+    }
+
+    // 7. Identity Shift 流程引導
     else if (userMessage === '顯化轉換' || userMessage === '轉換身分' || userMessage === '我想轉換') {
       return await client.replyMessage({ 
         replyToken, 
