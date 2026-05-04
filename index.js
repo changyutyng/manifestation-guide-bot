@@ -30,11 +30,36 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 });
 
 async function handleEvent(event) {
-  // 1. 處理加入好友 (Follow) 事件：主動發送歡迎引導
+  const welcomeMessage = {
+    type: 'text',
+    text: content.welcome,
+    quickReply: {
+      items: [
+        {
+          type: 'action',
+          action: { type: 'message', label: '🪐 抽牌提醒', text: '抽牌' }
+        },
+        {
+          type: 'action',
+          action: { type: 'message', label: '🧘🏻‍♂️ SOS急救', text: 'SOS' }
+        },
+        {
+          type: 'action',
+          action: { type: 'message', label: '📍 轉換身分', text: '我想轉換：(請在此輸入你的煩惱)' }
+        },
+        {
+          type: 'action',
+          action: { type: 'message', label: '⚖️ 幫我做選擇', text: '選擇：(請在此輸入猶豫的事)' }
+        }
+      ]
+    }
+  };
+
+  // 1. 處理加入好友 (Follow) 事件：主動發送歡迎引導 (含按鈕)
   if (event.type === 'follow') {
     return await client.replyMessage({
       replyToken: event.replyToken,
-      messages: [{ type: 'text', text: content.welcome }]
+      messages: [welcomeMessage]
     });
   }
 
@@ -53,9 +78,9 @@ async function handleEvent(event) {
   const guidePersona = "你的身分是「The Guide (共振導航)」。你是一位客觀、平靜、具備高維度洞察力的心靈導師。你不帶有情緒，不評判對錯，你的目的是協助使用者看清盲點，轉換匱乏的頻率，回到豐盛與力量的狀態。你對任何領域的煩惱（工作、感情、生活）都能給予建議。";
 
   try {
-    // 2. 功能選單/打招呼
+    // 2. 功能選單/打招呼 (含按鈕)
     if (['你好', '哈囉', '幫助', '說明', '功能', '你是誰', 'hi', 'hello', 'help'].includes(userMessage.toLowerCase())) {
-      return await client.replyMessage({ replyToken, messages: [{ type: 'text', text: content.welcome }] });
+      return await client.replyMessage({ replyToken, messages: [welcomeMessage] });
     }
     
     // 3. SOS (Grounding)
