@@ -47,11 +47,11 @@ async function handleEvent(event) {
       },
       {
         type: 'action',
-        action: { type: 'message', label: '📍 轉換身分', text: '我想轉換：(請在此輸入你的煩惱)' }
+        action: { type: 'message', label: '📍 轉換身分', text: '轉換身分' }
       },
       {
         type: 'action',
-        action: { type: 'message', label: '⚖️ 幫我做選擇', text: '選擇：(請在此輸入猶豫的事)' }
+        action: { type: 'message', label: '⚖️ 幫我做選擇', text: '幫我做選擇' }
       }
     ]
   };
@@ -107,9 +107,16 @@ async function handleEvent(event) {
       });
     }
     
-    // 5. Vibe Check / Dilemma Advice
+    // 5. Vibe Check / Dilemma Advice 流程引導
+    else if (userMessage === '幫我做選擇') {
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: '請問你現在正面臨什麼樣的選擇或猶豫呢？\n\n請在輸入框以「選擇：」開頭告訴我，例如：\n「選擇：我該接下這個新專案，還是先休息一陣子？」', quickReply: menuQuickReply }] 
+      });
+    }
+    // Vibe Check / Dilemma Advice 實際執行
     else if (userMessage.startsWith('選擇') || userMessage.startsWith('猶豫')) {
-      const dilemma = userMessage.replace(/^(選擇|猶豫)/, '').trim();
+      const dilemma = userMessage.replace(/^(選擇|猶豫)[:：]?/, '').trim();
       const prompt = `${guidePersona}
       使用者遇到了一個選擇或猶豫：「${dilemma}」。
       請用豐盛法則的角度，給予他客觀的分析與建議。引導他選擇那個會讓他感到「擴展」而非「萎縮」的選項。
@@ -122,7 +129,14 @@ async function handleEvent(event) {
       });
     }
 
-    // 6. Identity Shift (Default for all other text)
+    // 6. Identity Shift 流程引導
+    else if (userMessage === '轉換身分' || userMessage === '我想轉換') {
+      return await client.replyMessage({ 
+        replyToken, 
+        messages: [{ type: 'text', text: '準備好進行身分轉換了嗎？\n\n請直接在下方輸入你目前的困境、焦慮或願望（例如：「我好擔心下個月的收入」），我將為你調整頻率。', quickReply: menuQuickReply }] 
+      });
+    }
+    // Identity Shift 實際執行 (Default for all other text)
     else {
       const prompt = `${guidePersona}
       使用者提供了一段關於困境、願望或能力的陳述：「${userMessage}」。
